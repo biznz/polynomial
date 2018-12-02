@@ -1,0 +1,205 @@
+#########################################################################################
+										README
+#########################################################################################
+
+1. Running file
+	
+	-load the script with -s, -l as argument on swipl followed by Grupo9_T1.pl
+
+#########################################################################################
+
+2. Definitions
+	
+	Script contains the following definitions:
+	
+	-pvars/1. 
+		a list as argument,defines a list of usable variables
+	
+	-pvar/1.
+		checks if argument is a var
+	
+	-power/1
+		checks if a var is of the form 'letter' and 'letter^integer'
+	
+	-coefficient/1
+		checks if argument is a number
+
+	-delete_coefficient/2
+		monomial as 1st argument. Useful to change monomials of the form
+		0*x into 0, -1*x into -x, 1*x into x, does nothing on other monomials
+
+	-add_coefficient/2
+		monomial as 1st argument. Useful to change monomials of the form
+		x into 1*x, -x into -1*x does nothing on other monomials
+
+	-negativeMonomial/1
+		monomial as argument, checks if a given monomial is negative
+		uses add_coefficient of cases -x,x
+	
+	-monomial/1
+		checks if argument is a monomial
+	
+	-polynomial/1
+		checks recursively if argument is of the form P+M or P-M where 
+		P is a Polynom and M a monomial
+
+	-monomial_mult/3
+		first 2 arguments as monomials ( 1st argument must be a scalar ).
+		yields product of a scalar by a second monomial on third argument
+	
+	-monomial_add/3
+		first 2 arguments as monomials
+		yields the sum of a monomial by a second monomial on third argument
+
+	-monom_add_polynom/3
+		first argument is a list with a single monomial, second a list of monomials.
+		Produces the result of adding that monomial to any of the monomials at 
+		the list ( as second argument). Fails if it cannot add.
+		
+		!!Note!!:Check tested queries 
+
+	-poly2list/2
+		transforms a list representing a polynomial (second
+		argument) into a polynomial represented as an expression (first argu-
+		ment) and vice-versa.
+
+	-simpoly_list/2
+		simplifies a polynomial represented as a list (1st argument) into
+		another polynomial as a list (2nd argument).
+
+	-acc/3
+		used to build a result list with simpoly_list
+		1st argument the input list, second argument is an accumulator list,
+		third argument the result of recursively applying monom_add_polynom
+		on each monomial of the first list.
+		monom_add_polynom adds a monomial to a list of monomials, if the operation
+		fails the monomial to add is then put in the accumulator list. 
+		Recursively
+		repeats the operation until the 1st list is empty and second list is the
+		result of simplifying the polynom
+
+	-simpoly/2
+		simplifies a polynomial represented as an expression (1st argument)
+		as another polynomial as an expression(2nd argument). 
+
+	-scalepoly/3
+		multiplies one polynomial as expression (1st argument) by a scalar (2nd argument)
+		resulting in a second polynomial. The two first arguments are as-
+		sumed to be ground. The polynomial resulting from the sum is in
+		simplified form.
+		Uses scale/3 to perform the arithmetic operation
+
+	-scale/3
+		multiplies a scalar (2nd argument) by each monomial in a list (1st argument)
+		third argument is the resulting list
+
+	-addpoly/3
+		performs addition on two polynomes as expression (1st and second argument)
+		it does so by appending the 1st and 2nd arguments turned lists and simplifies
+		that list
+
+	-append/3
+		1st argument and 2nd argument lists to append, 3rd argument the resulting list 
+
+#########################################################################################
+
+3. Tests
+	-the follwoing queries were tested:
+
+	monom_add_polynom([y],[1,2*x,-2*y],Z).
+	Z = [1, 2*x, -y].
+
+
+	monom_add_polynom([z],[1,2*x,-2*y],Z).
+	false. <-- this result is used in simpoly_list to add z to the accumulator list
+	when a monomial cannot be added to other monomials in a list, that's when we
+	say that a momomial is in its simplified form
+
+	monom_add_polynom([z],[1,2*x,-2*y,z],Z).
+	Z = [1, 2*x, -2*y, 2*z].
+	----------------------------------------
+
+	**fail on K^K, !!!number(K)** ex: 3^2
+
+	poly2list(2*x+2+5+y*2,Z).
+	!!!false.		// K*var only form accepted  var*k will fail
+
+
+	poly2list(2*x+2+5-2*y,Z).
+	Z = [-2*y, 5, 2, 2*x].
+
+	[2]  ?- poly2list(-x+2+5-2*y,Z).
+	Z = [-2*y, 5, 2, -x].
+
+	poly2list(-1*x-z+2-5-2*y^2-0,Z).
+	Z = [0, -2*y^2, -5, 2, -z, -1*x].
+
+	poly2list(0,Z).
+	Z = [0].
+
+	!!FAIL 
+	simpoly_list([-5,3,-x,x],T).
+	T = [0, -2].
+
+	poly2list(Z,[0, -2*y^2, -5, 2, -z, -1*x]).
+	Z = -1*x-1*z+2-5-2*y^2+0.  //poly2list(P-H*O,[M|Ys]):-monomial(M),negativeMonomial(M),
+									add_coefficient(M,Y*O),H is -1*Y,poly2list(P,Ys),!. pq resultava em 
+									 poly2list(Z,[0, -2*y^2, -5, 2, -z, -1*x]).
+										Z = -1*x-1*z+2-5-2*y^2+0.
+	poly2list(Z,[0, -2*y^2, -5, -2, -z, -1*x,0*x,-x]).
+	Z = -x+0*x-1*x-1*z-2-5-2*y^2+0.
+
+
+
+	---------------------------------
+
+
+	simpoly_list([-1*x,x],X).
+	X = [0].
+
+	simpoly_list([-2*y^2,-1*x,0*x,-x],X).
+	X = [-2*x, -2*y^2].
+
+	simpoly_list([2*y^2,-2*y^2,-1*x,0,-x],X).
+	X = [-2*x].
+
+	simpoly(-1*x-z+2+3*x-5-2*y^2+0,Z).
+	Z = -2*y^2-3-1*z+2*x.
+
+	simpoly(-x+2+5-2*y,Z).
+	Z = -2*y+7-1*x.  <---should be -2*y+7-x
+
+	simpoly(2+5-2*y-x,Z).
+	Z = -x-2*y+7.   <--- ok, ??!
+
+	scalepoly(-1*x^2+3*x^2-2*y^4,0,Z).
+	Z = 0.
+
+	----------------------------------
+
+
+	scalepoly(0+x+4-2*y^4,-2,Z).
+	Z = 4*y^4-2*x-8.
+
+	scalepoly(0+x+4-2*y^4,1,Z).
+	Z = -2*y^4+x+4.
+
+	scalepoly(-1*x^2+6*x^2-2*y^4,2,Z).
+	Z = -4*y^4+10*x^2.
+
+	addpoly(-1*x^2+6*x^2-2*y^4,-1*x^2+6*x^2-2*y^4,Z).
+	z = -4*y^4+10*x^2.
+
+	scalepoly(2*y^4+5-5+2*x,-3,Z).
+	Z = -6*x-6*y^4.
+
+	addpoly(-1*x^2+6*x^2-2*y^4,0,U).
+	U = -2*y^4+5*x^2
+
+poly2list(,Z).
+[2*x 3ˆ2, 5, y*2]
+poly2list(Z,).
+
+
+#########################################################################################
+
