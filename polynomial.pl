@@ -38,7 +38,7 @@ polynomial(M):-monomial(M),!.
 polynomial(P+M):-monomial(M),polynomial(P),!.
 polynomial(P-M):-monomial(M),polynomial(P),!.
 
-%operations on polynomials
+                %operations on monomials,polynomials
 
 %adding monomials.
 
@@ -63,15 +63,11 @@ monom_add_polynom(X,[],[X]):-!.
 monom_add_polynom(X,[Y|Ys],[R|Ys]):-monomial_add(X,Y,R),!.
 monom_add_polynom(X,[Y|Ys],[Y|Z]):-monom_add_polynom(X,Ys,Z),!.
 
-
 %sign of a number
 
 negativeMonomial(X):-number(X),X<0,!.
 negativeMonomial(K*_):-K<0,!.
 negativeMonomial(X):-add_coefficient(X,K*_),K<0,!.
-
-
-
 
 
 %%%%%% 1 %%%%%%%
