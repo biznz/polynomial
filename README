@@ -4,7 +4,8 @@
 
 1. Running file
 	
-	-load the script with -s, -l as argument on swipl followed by polynomial.pl
+	-load the script with -s, -l as argument on swipl followed by polynomial.pl OR
+	simply "swipl polynomial.pl" on UNIX 
 
 #########################################################################################
 
