@@ -1,0 +1,16 @@
+.form-control-borderless {
+    border: none;
+}
+
+.form-control-borderless:hover, .form-control-borderless:active, .form-control-borderless:focus {
+    border: none;
+    outline: none;
+    box-shadow: none;
+}
+
+#result{
+	border: 2px solid blue;
+	width: 100%;
+	padding:20px;
+	margin-top: 40px;
+}
