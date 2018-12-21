@@ -1,16 +1,88 @@
 #########################################################################################
-					README
+										README
 #########################################################################################
 
 1. Running file
 	
-	-load the script with -s, -l as argument on swipl followed by polynomial.pl OR
-	simply "swipl polynomial.pl" on UNIX 
+	-load the script with -s, -l as argument on swipl followed by Grupo9_T2.pl
 
 #########################################################################################
 
 2. Definitions
 	
+2.1 Assignment 2
+	
+	%%% DCGs %%%
+
+	-num/3
+		defines numbers through decimals: zero, unit , tenth, denary, hundreds
+
+	-fl/3
+		defines floats as a decimal a point and a fraction
+		Not currently used
+
+	-fraction/3
+		implements fractions as a succession of unit/3 or zero/3 on a list
+		Ex: ["one","one","zero","one"|...]
+
+	-var/3
+		defines a wich is a lower case alphabet char, refers to pvar, pvars
+
+	-store/3
+		defines storable vars as p1,p2 and p3
+
+	-assignment/3
+		used to build a storable var with a polynom producing storvar = polynom
+
+	-po/3
+		defines a poweproduct as a var or var^num
+
+	-mon/3
+		defines a monomial as a num, powerproduct , num*powerproduct
+
+	-poly/3
+		defines a polynomial as monomial, or as a result of operation ( sum or subtraction )
+		with between monomials
+
+	-text2poly/3
+		produces a polynom resorting to string_split and running tokens on the above defined grammar
+
+	-fix_poly/2
+		used to interface with previous assignment.
+		The defined DCG produces polynomials of the form MonOp(MonOpPoly), a polynomial that
+		cannot be run on previously defined predicates. The predicate transforms any polynomial
+		to the form MonOpMonOpPoly which can now be run on addpoly,scalepoly,simpoly
+		Code can be run without this predicate if resulting polynom is of the form MonOpMon or MonOpMon with MonOpMon
+
+	-tokenize/2
+		split_string used to parse tokens from string
+
+	-do_something/2
+		parses instruction grammar
+
+	-instructions/3
+		grammar for commands add, subtract, simplify, multiply. 
+		Different definitions were added to account for input errors, also other commands
+		are parsed
+
+	-commands/3
+		used for commands help, exit and any other input taken as error
+
+	-error/3
+		prints errors for specific commands
+
+	-polyplay/0
+		runs an environment where commands can be run with polynomials as text
+		loops readin from stdin, using do_something, writing output to stdout
+
+	-readText/1
+		reads from input using current_stream stdin identifier and read_string/5
+
+	-writeText/1
+		used to write to stdout
+
+2.2 Assignment 1
+
 	Script contains the following definitions:
 	
 	-pvars/1. 
@@ -59,13 +131,11 @@
 		
 		!!Note!!:Check tested queries 
 
-	##### 1 ####
 	-poly2list/2
 		transforms a list representing a polynomial (second
 		argument) into a polynomial represented as an expression (first argu-
 		ment) and vice-versa.
 
-	###### 2 ######
 	-simpoly_list/2
 		simplifies a polynomial represented as a list (1st argument) into
 		another polynomial as a list (2nd argument).
@@ -81,12 +151,10 @@
 		repeats the operation until the 1st list is empty and second list is the
 		result of simplifying the polynom
 
-	#### 3 ###
 	-simpoly/2
 		simplifies a polynomial represented as an expression (1st argument)
 		as another polynomial as an expression(2nd argument). 
 
-	#### 4 #####
 	-scalepoly/3
 		multiplies one polynomial as expression (1st argument) by a scalar (2nd argument)
 		resulting in a second polynomial. The two first arguments are as-
@@ -98,7 +166,6 @@
 		multiplies a scalar (2nd argument) by each monomial in a list (1st argument)
 		third argument is the resulting list
 
-	#### 5 ###
 	-addpoly/3
 		performs addition on two polynomes as expression (1st and second argument)
 		it does so by appending the 1st and 2nd arguments turned lists and simplifies
@@ -107,14 +174,16 @@
 	-append/3
 		1st argument and 2nd argument lists to append, 3rd argument the resulting list 
 
-#########################################################################################
-
-3. Notes
-
-	-a monomial is not described as having the form var*coefficient
-	-monomials on degree 0 have addition and subtraction described
-	-multiplication is describe on monomial(number)*monomial(X^Y) where Y>=1
-	-scalars not described as a product of scalars or power of scalars 
 
 #########################################################################################
 
+3. NOTES:
+	
+	floats - fl/3 partially working the rule num(X)-->fl(X) can be uncommented to test
+		errors running commands with it. Not the best implementation
+
+	variables - only lower case characters allowed
+	storable variables - p1, p2, p3 used
+	partially working, implementation not correct, can be uncommented to test var/3
+
+	previous assignment was included with added corrections
