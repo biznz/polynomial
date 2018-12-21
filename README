@@ -49,10 +49,12 @@
 
 	-fix_poly/2
 		used to interface with previous assignment.
-		The defined DCG produces polynomials of the form MonOp(MonOpPoly), a polynomial that
-		cannot be run on previously defined predicates. The predicate transforms any polynomial
-		to the form MonOpMonOpPoly which can now be run on addpoly,scalepoly,simpoly
-		Code can be run without this predicate if resulting polynom is of the form MonOpMon or MonOpMon with MonOpMon
+		The defined DCG produces polynomials of the form MonOp(MonOpPoly),
+		a polynomial that cannot be run on previously defined predicates. 
+		The predicate transforms any polynomial to the form MonOpMonOpPoly which 
+		can now be run on addpoly,scalepoly,simpoly
+		Code can be run without this predicate if resulting polynom is of 
+		the form MonOpMon or MonOpMon with MonOpMon
 
 	-tokenize/2
 		split_string used to parse tokens from string
@@ -62,8 +64,8 @@
 
 	-instructions/3
 		grammar for commands add, subtract, simplify, multiply. 
-		Different definitions were added to account for input errors, also other commands
-		are parsed
+		Different definitions were added to account for input errors, 
+		also other commands are parsed
 
 	-commands/3
 		used for commands help, exit and any other input taken as error
